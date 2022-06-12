@@ -1,6 +1,7 @@
 const Bubble_sort = async (array, numberOfItems, sortBlocksRefs) => {
     for (let i = 0; i < numberOfItems; i++) {
         let timerTime = 0;
+
         for (let j = 0; j < numberOfItems; j++) {
             let change = false;
             let time = ((j + 1) * (i + 1)) / 1000;
