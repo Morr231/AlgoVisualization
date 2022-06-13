@@ -170,8 +170,10 @@ const Search = () => {
                 onClick={() => {
                     recursiveDivision({
                         array: resultArray,
-                        center: Math.floor(resultArray[0].length / 2),
                         refs: searchBlocksRefs,
+                        width: resultArray.length - 1,
+                        height: resultArray[0].length - 1,
+                        orientation: "h",
                     });
                 }}
             >

@@ -1,33 +1,33 @@
-const chooseOrientation = (width, height) => {
-    if (width > height) {
-        return "v";
-    } else if (height > width) {
-        return "h";
-    }
-    return Math.floor(Math.random(2)) === 0 ? "h" : "v";
-};
-
 const recursiveDivision = ({ array, refs, width, height, orientation }) => {
+    console.log("Hello");
+
     if (width < 2 || height < 2) {
         return;
     }
     // build line till next end
     let startCenter =
-        orientation === "h" ? { x: 0, y: height / 2 } : { x: width / 2, y: 0 };
+        orientation === "h"
+            ? { x: 0, y: Math.floor(height / 2) }
+            : { x: Math.floor(width / 2), y: 0 };
     let endCenter =
         orientation === "h"
-            ? { x: width, y: height / 2 }
-            : { x: width / 2, y: height };
+            ? { x: Math.floor(width), y: Math.floor(height / 2) }
+            : { x: Math.floor(width / 2), y: Math.floor(height) };
 
-    console.log(startCenter.x, endCenter.x);
+    console.log(array.length, array[0].length);
 
-    while (startCenter.x !== endCenter.x + 1) {
-        console.log(refs[startCenter.x * 35 + startCenter.y]);
-        refs[startCenter.x * 35 + startCenter.y].classList.toggle("block-wall");
-        console.log(startCenter.x, startCenter.y);
+    let condStart = orientation === "h" ? startCenter.x : startCenter.y;
+    let condEnd = orientation === "h" ? endCenter.x : endCenter.y;
 
-        array[startCenter.x][startCenter.y].state = "wall";
+    while (condStart !== condEnd + 1) {
+        let wallEl = refs[startCenter.x * 35 + startCenter.y];
 
+        if (!wallEl.classList.contains("block-wall")) {
+            wallEl.classList.add("block-wall");
+            array[startCenter.x][startCenter.y].state = "wall";
+        }
+
+        condStart++;
         orientation === "h" ? startCenter.x++ : startCenter.y++;
     }
 
@@ -36,9 +36,11 @@ const recursiveDivision = ({ array, refs, width, height, orientation }) => {
             ? Math.floor(Math.random() * endCenter.x)
             : Math.floor(Math.random() * endCenter.y);
 
+    console.log(randomWall);
+
     orientation === "h"
-        ? refs[randomWall * 35 + startCenter.y].classList.toggle("block-wall")
-        : refs[startCenter * 35 + randomWall].classList.toggle("block-wall");
+        ? refs[randomWall * 35 + startCenter.y].classList.remove("block-wall")
+        : refs[startCenter.x * 35 + randomWall].classList.remove("block-wall");
 
     orientation === "h"
         ? (array[randomWall][startCenter.y].state = "wall")
@@ -46,13 +48,22 @@ const recursiveDivision = ({ array, refs, width, height, orientation }) => {
 
     if (orientation === "h") {
         // top
-        recursiveDivision({ array: array, refs: refs, width: width / 2, height: height, orientation: chooseOrientation(width / 2, height) });
-        // bottom
-        recursiveDivision({ array: array, refs: refs, width:, height:, orientation(width, height) });
+        recursiveDivision({
+            array: array,
+            refs: refs,
+            width: width / 2,
+            height: height,
+            orientation: "v",
+        });
     }
 
-    recursiveDivision({ array: array, refs: refs });
-    recursiveDivision({ array: array, refs: refs });
+    recursiveDivision({
+        array: array,
+        refs: refs,
+        width: width,
+        height: height / 2,
+        orientation: "h",
+    });
 };
 
 export default recursiveDivision;
