@@ -16,8 +16,8 @@ const Search = () => {
 
     const [speed, setSpeed] = useState(150);
 
-    let xSize = 50;
-    let ySize = 15;
+    let xSize = Math.floor(window.innerHeight / 50) - 1;
+    let ySize = Math.floor(window.innerWidth / 50);
 
     const mainGraph = new Graph();
 
@@ -37,44 +37,26 @@ const Search = () => {
                 for (let el of visited) {
                     let currentInserted = [];
 
-                    if (el.x + 1 < resultArray.length) {
-                        const upperN = resultArray[el.x + 1][el.y];
-                        if (!(upperN.state == "wall")) {
-                            if (currentN.indexOf(upperN) == -1) {
-                                currentN.push(upperN);
-                            }
-                            currentInserted.push(upperN);
-                        }
-                    }
+                    if (
+                        el.x + 1 < resultArray.length &&
+                        el.x - 1 >= 0 &&
+                        el.y + 1 < resultArray[0].length &&
+                        el.y - 1 >= 0
+                    ) {
+                        const N = [];
+                        N.push(resultArray[el.x + 1][el.y]);
+                        N.push(resultArray[el.x - 1][el.y]);
+                        N.push(resultArray[el.x][el.y - 1]);
+                        N.push(resultArray[el.x][el.y + 1]);
 
-                    if (el.x - 1 >= 0) {
-                        const lowerN = resultArray[el.x - 1][el.y];
-                        if (!(lowerN.state == "wall")) {
-                            if (currentN.indexOf(lowerN) == -1) {
-                                currentN.push(lowerN);
+                        N.forEach((n) => {
+                            if (!(n.state === "wall")) {
+                                if (currentN.indexOf(n) === -1) {
+                                    currentN.push(n);
+                                }
+                                currentInserted.push(n);
                             }
-                            currentInserted.push(lowerN);
-                        }
-                    }
-
-                    if (el.y + 1 < resultArray[0].length) {
-                        const rightN = resultArray[el.x][el.y + 1];
-                        if (!(rightN.state == "wall")) {
-                            if (currentN.indexOf(rightN) == -1) {
-                                currentN.push(rightN);
-                            }
-                            currentInserted.push(rightN);
-                        }
-                    }
-
-                    if (el.y - 1 >= 0) {
-                        const leftN = resultArray[el.x][el.y - 1];
-                        if (!(leftN.state == "wall")) {
-                            if (currentN.indexOf(leftN) == -1) {
-                                currentN.push(leftN);
-                            }
-                            currentInserted.push(leftN);
-                        }
+                        });
                     }
 
                     currentInserted.forEach((N) => {
@@ -99,7 +81,7 @@ const Search = () => {
                 }
 
                 currentN.forEach((el) => {
-                    searchBlocksRefs[el.x * 35 + el.y].classList.add(
+                    searchBlocksRefs[el.x * ySize + el.y].classList.add(
                         "block-visited"
                     );
                 });
@@ -119,13 +101,13 @@ const Search = () => {
 
                 while (endResult[0] != startNode.el.vertice) {
                     searchBlocksRefs[
-                        endResult[2] * 35 + endResult[3]
+                        endResult[2] * ySize + endResult[3]
                     ].classList.add("block-result");
                     endResult = result[endResult[1]];
 
                     if (endResult[0] == 0) {
                         searchBlocksRefs[
-                            startNode.el.x * 35 + startNode.el.y
+                            startNode.el.x * ySize + startNode.el.y
                         ].classList.add("block-result");
                         break;
                     }
@@ -194,6 +176,8 @@ const Search = () => {
             />
 
             <SearchBlocks
+                xSize={xSize}
+                ySize={ySize}
                 blockState={blockState}
                 resultArray={resultArray}
                 startNode={startNode}

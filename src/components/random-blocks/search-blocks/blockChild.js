@@ -37,7 +37,7 @@ const BlockChild = ({
 
     return (
         <div className="block" onClick={changeState} ref={forwardedRef}>
-            {el.weight} x = {el.x} y = {el.y}
+            {/* {el.weight} x = {el.x} y = {el.y} */}
         </div>
     );
 };

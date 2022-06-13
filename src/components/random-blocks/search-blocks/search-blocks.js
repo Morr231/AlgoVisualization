@@ -6,6 +6,8 @@ import Block from "./block";
 import "./search-blocks.sass";
 
 const SearchBlocks = ({
+    xSize,
+    ySize,
     blockState,
     resultArray,
     setResultArray,
@@ -23,9 +25,9 @@ const SearchBlocks = ({
 
     useEffect(() => {
         setResultArray(
-            new Array(16).fill(0).map((f, indexF) => {
-                return new Array(35).fill(0).map((s, indexS) => {
-                    return new Block(indexF * 35 + indexS, indexF, indexS);
+            new Array(xSize).fill(0).map((f, indexF) => {
+                return new Array(ySize).fill(0).map((s, indexS) => {
+                    return new Block(indexF * ySize + indexS, indexF, indexS);
                 });
             })
         );
@@ -51,7 +53,10 @@ const SearchBlocks = ({
 
     return (
         <div className="search-blocks">
-            <div className="block-container">
+            <div
+                className="block-container"
+                style={{ gridTemplateColumns: `repeat(${ySize}, 50px)` }}
+            >
                 {resultArray.map((elF, indexF) => {
                     return elF.map((elS, indexS) => {
                         return (
@@ -64,7 +69,7 @@ const SearchBlocks = ({
                                 blockState={blockState}
                                 forwardedRef={(ref) =>
                                     (randomSearchBlocksRef.current[
-                                        indexF * 35 + indexS
+                                        indexF * ySize + indexS
                                     ] = ref)
                                 }
                             />
